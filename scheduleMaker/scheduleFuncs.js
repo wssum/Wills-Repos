@@ -1,9 +1,8 @@
 const employees = [
     {
       name: "Athrun Zala",
-      morning: true,
-      night: false,
       daysAvailable: [
+        {name: "Sunday", from: 7, to: 12},
         {name: "Monday", from: 7, to: 12}, 
         {name: "Tuesday", from: 10, to: 22}, 
         {name: "Wednesday", from: 7, to: 12}
@@ -11,8 +10,6 @@ const employees = [
     },
     {
       name: "Greg Capall",
-      morning: false,
-      night: true,
       daysAvailable: [
         {name: "Thursday", from: 15, to: 22}, 
         {name: "Friday", from: 15, to: 22}, 
@@ -21,8 +18,6 @@ const employees = [
     },
     {
       name: "Homer Simpson", 
-      morning: true,
-      night: true,
       daysAvailable: [
         {name: "Sunday", from: 7, to: 22}, 
         {name: "Monday", from: 7, to: 22}, 
@@ -35,8 +30,6 @@ const employees = [
     },
     {
       name: "Will Sum",
-      morning: false,
-      night: true,
       daysAvailable: [
         {name: "Monday", from: 15, to: 22}, 
         {name: "Tuesday", from: 15, to: 22}, 
@@ -46,8 +39,6 @@ const employees = [
     },
     {
       name: "Avery Man", 
-      morning: true,
-      night: false,
       daysAvailable: [
         {name: "Thursday", from: 7, to: 12}, 
         {name: "Friday", from: 7, to: 12}, 
@@ -57,24 +48,30 @@ const employees = [
     },
     {
       name: "Marge Simpson",
-      morning: true,
-      night: true,
       daysAvailable: [
         {name: "Monday", from: 7, to: 22}, 
-        {name: "Wednesday", from: 7, to: 22}, 
+        {name: "Wednesday", from: 7, to: 22},
+        {name: "Thursday", from: 7, to: 12}, 
         {name: "Friday", from: 7, to: 22}
       ]
     },
     {
       name: "Tony Lau",
-      morning: true,
-      night: true,
       daysAvailable: [
-        {name: "Tuesday", from: 7, to: 22}, 
+        {name: "Tuesday", from: 7, to: 22},
+        {name: "Friday", from: 15, to: 22}, 
         {name: "Thursday", from: 7, to: 22}, 
         {name: "Saturday", from: 7, to: 22}
       ]
-    }
+    },
+    {
+        name: "Ray Gibson",
+        daysAvailable: [
+         {name: "Saturday", from: 7, to: 12},
+          {name: "Friday", from: 15, to: 22}, 
+          {name: "Thursday", from: 7, to: 22}
+        ]
+      }
   ];
   
   let schedule = [
@@ -85,7 +82,7 @@ const employees = [
       allAround: [],
       openersRequired: 1,
       closersRequired: 1,
-      allAroundsRequired: 1, // Remains 1 for Monday
+      allAroundsRequired: 1,
       open: 7,
       close: 22
     },
@@ -96,7 +93,7 @@ const employees = [
       allAround: [],
       openersRequired: 1,
       closersRequired: 1,
-      allAroundsRequired: 1, // Remains 1 for Tuesday
+      allAroundsRequired: 1,
       open: 7,
       close: 22
     },
@@ -107,7 +104,7 @@ const employees = [
       allAround: [],
       openersRequired: 1,
       closersRequired: 1,
-      allAroundsRequired: 2, // Updated to 2
+      allAroundsRequired: 2, 
       open: 7,
       close: 22
     },
@@ -117,8 +114,8 @@ const employees = [
       closer: [],
       allAround: [],
       openersRequired: 1,
-      closersRequired: 1,
-      allAroundsRequired: 2, // Updated to 2
+      closersRequired: 2,
+      allAroundsRequired: 2, 
       open: 7,
       close: 22
     },
@@ -128,8 +125,8 @@ const employees = [
       closer: [],
       allAround: [],
       openersRequired: 1,
-      closersRequired: 1,
-      allAroundsRequired: 2, // Updated to 2
+      closersRequired: 2,
+      allAroundsRequired: 2, 
       open: 7,
       close: 22
     },
@@ -138,9 +135,9 @@ const employees = [
       opener: [],
       closer: [],
       allAround: [],
-      openersRequired: 1,
+      openersRequired: 2,
       closersRequired: 1,
-      allAroundsRequired: 2, // Updated to 2
+      allAroundsRequired: 2, 
       open: 7,
       close: 22
     },
@@ -149,37 +146,48 @@ const employees = [
       opener: [],
       closer: [],
       allAround: [],
-      openersRequired: 1,
+      openersRequired: 2,
       closersRequired: 1,
-      allAroundsRequired: 2, // Updated to 2
+      allAroundsRequired: 1, 
       open: 7,
       close: 22
     }
   ];
-  
-function whichShift(worker,workDay)
-{
-    let shift;
-    worker.daysAvailable.forEach((shiftDay)=>{
-        if(shiftDay.name.toLowerCase == workDay.day.toLowerCase)
-        {
-            if((shiftDay.from >= workDay.open)&& (shiftDay.to <= (workDay.open + 5)))
-            {
-                shift = "O";
-            }
-            else if((shiftDay.from >= (workDay.open + 8))&& (shiftDay.to <= workDay.close))
-            {
-                shift = "C";
-            }
-            else if((shiftDay.from >= workDay.open)&& (shiftDay.to <= workDay.close)){
-                shift = "A";
-            }
-        }
-    })
-   return shift;
-}
 
-
+  function whichShift(worker,workDay)
+  {
+      let shift;
+      worker.daysAvailable.forEach((shiftDay)=>{
+          if(shiftDay.name.toLowerCase == workDay.day.toLowerCase)
+          {
+              if((shiftDay.from == workDay.open)&& (shiftDay.to < workDay.close))
+              {
+                  shift = "O";
+              }
+              else if((shiftDay.from > workDay.open)&& (shiftDay.to == workDay.close))
+              {
+                  shift = "C";
+              }
+              else if((shiftDay.from >= workDay.open)&& (shiftDay.to == workDay.close)){
+                if(workDay.allAround.length < workDay.allAroundsRequired)
+                {
+                    shift = "A";
+                }
+                else if(workDay.closer.length < workDay.closersRequired)
+                {
+                    shift = "C";
+                }
+                else if(workDay.opener.length < workDay.openersRequired)
+                {
+                    shift = "O";
+                }
+                
+              }
+          }
+      })
+     return shift;
+  }
+ 
 
 //make days have anouther attribute for each for number of openenrs, closers and allaround
 function makeSchedule(workers) {
