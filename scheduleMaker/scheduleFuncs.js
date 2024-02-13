@@ -153,22 +153,22 @@ const employees = [
       close: 22
     }
   ];
+  function whichShift(worker, workDay) {
+    let shift = null;
+    worker.daysAvailable.forEach((shiftDay) => {
+        if (shiftDay.name.toLowerCase() === workDay.day.toLowerCase()) {
+            if (shiftDay.from == workDay.open && shiftDay.to < workDay.close) {
+                if(workDay.opener.length < workDay.openersRequired)
+                {
+                    shift = "O";
+                }
+            } else if (shiftDay.from > workDay.open && shiftDay.to == workDay.close) {
+                if(workDay.closer.length < workDay.closersRequired)
+                {
+                    shift = "C";
+                }
 
-  function whichShift(worker,workDay)
-  {
-      let shift;
-      worker.daysAvailable.forEach((shiftDay)=>{
-          if(shiftDay.name.toLowerCase == workDay.day.toLowerCase)
-          {
-              if((shiftDay.from == workDay.open)&& (shiftDay.to < workDay.close))
-              {
-                  shift = "O";
-              }
-              else if((shiftDay.from > workDay.open)&& (shiftDay.to == workDay.close))
-              {
-                  shift = "C";
-              }
-              else if((shiftDay.from >= workDay.open)&& (shiftDay.to == workDay.close)){
+            } else if (shiftDay.from == workDay.open && shiftDay.to == workDay.close) {
                 if(workDay.allAround.length < workDay.allAroundsRequired)
                 {
                     shift = "A";
@@ -181,13 +181,11 @@ const employees = [
                 {
                     shift = "O";
                 }
-                
-              }
-          }
-      })
-     return shift;
-  }
- 
+            }
+        }
+    });
+    return shift;
+}
 
 //make days have anouther attribute for each for number of openenrs, closers and allaround
 function makeSchedule(workers) {
