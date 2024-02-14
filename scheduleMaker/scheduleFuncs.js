@@ -58,9 +58,9 @@ const employees = [
   {
     name: "Tony Lau",
     daysAvailable: [
-      {name: "Tuesday", from: 9, to: 22},
+      {name: "Tuesday", from: 9, to: 22}, 
+      {name: "Thursday", from: 9, to: 23},
       {name: "Friday", from: 15, to: 24}, 
-      {name: "Thursday", from: 9, to: 23}, 
       {name: "Saturday", from: 8, to: 24}
     ]
   },
@@ -334,7 +334,7 @@ function scheduleReq(daysOfWork)
       };
       workDays.push(sat);
       schedule = workDays;         
-      resolve(workDays);
+      resolve(schedule);
     }catch(error)
     {
        reject(error);
@@ -344,7 +344,28 @@ function scheduleReq(daysOfWork)
 
 function newWorker(employ)
 {
-
+  return new Promise((resolve,reject)=>{
+   try{
+    let newEmployee = {
+      name: employ.empName,
+      daysAvailable: [
+        {name: "Monday", from: employ.monAvailFrom, to: employ.monAvailTo},
+        {name: "Tuesday", from: employ.tuesAvailFrom, to: employ.tuesAvailTo},
+        {name: "Wednesday", from: employ.wedAvailFrom, to: employ.wedAvailTo},
+        {name: "Thursday", from: employ.thursAvailFrom, to: employ.thursAvailTo},
+        {name: "Friday", from: employ.friAvailFrom, to: employ.friAvailTo},
+        {name: "Saturday", from: employ.satAvailFrom, to: employ.satAvailTo},
+        {name: "Sunday", from: employ.sunAvailFrom, to: employ.sunAvailTo}
+      ]
+    };
+   employees.push(newEmployee);
+   console.log(employees);
+   resolve(employees);    
+   }catch(error)
+   {
+    console.log(error);
+   }
+  });
 }
 
 makeSchedule(employees);

@@ -4,7 +4,53 @@
     </head>
 <body>
     <form action = "/newEmployee" method = "post">
-        <input type = "text">
+        <label for = "employeeName">Employee Name:</label>
+        <input id = "employeeName" type = "text" name = "empName" placeholder="Enter Name">
+        <label for = "monWorkFrom"><h2 class="text-xl">
+            Monday Availability
+          </h2></label>
+        <input type="number" id="monWorkFrom" name = "monAvailFrom" min = 7 max = 24>
+        
+        <label for = "monWorkTo"><h2 class="text-xl">
+          </h2></label>
+        <input type="number" id="monWorkTo" name = "monAvailTo" min = 7 max = 24>
+        
+<label for="tuesWorkFrom"><h2 class="text-xl">Tuesday Availability</h2></label>
+<input type="number" id="tuesWorkFrom" name="tuesAvailFrom" min="7" max="24">
+
+<label for="tuesWorkTo"><h2 class="text-xl"></h2></label>
+<input type="number" id="tuesWorkTo" name="tuesAvailTo" min="7" max="24">
+
+<label for="wedWorkFrom"><h2 class="text-xl">Wednesday Availability</h2></label>
+<input type="number" id="wedWorkFrom" name="wedAvailFrom" min="7" max="24">
+
+<label for="wedWorkTo"><h2 class="text-xl"></h2></label>
+<input type="number" id="wedWorkTo" name="wedAvailTo" min="7" max="24">
+
+<label for="thursWorkFrom"><h2 class="text-xl">Thursday Availability</h2></label>
+<input type="number" id="thursWorkFrom" name="thursAvailFrom" min="7" max="24">
+
+<label for="thursWorkTo"><h2 class="text-xl"></h2></label>
+<input type="number" id="thursWorkTo" name="thursAvailTo" min="7" max="24">
+
+<label for="friWorkFrom"><h2 class="text-xl">Friday Availability</h2></label>
+<input type="number" id="friWorkFrom" name="friAvailFrom" min="7" max="24">
+
+<label for="friWorkTo"><h2 class="text-xl"></h2></label>
+<input type="number" id="friWorkTo" name="friAvailTo" min="7" max="24">
+
+<label for="satWorkFrom"><h2 class="text-xl">Saturday Availability</h2></label>
+<input type="number" id="satWorkFrom" name="satAvailFrom" min="7" max="24">
+
+<label for="satWorkTo"><h2 class="text-xl"></h2></label>
+<input type="number" id="satWorkTo" name="satAvailTo" min="7" max="24">
+
+<label for="sunWorkFrom"><h2 class="text-xl">Sunday Availability</h2></label>
+<input type="number" id="sunWorkFrom" name="sunAvailFrom" min="7" max="24">
+
+<label for="sunWorkTo"><h2 class="text-xl"></h2></label>
+<input type="number" id="sunWorkTo" name="sunAvailTo" min="7" max="24">
+
         <input type="submit" placeholder="submit">
     </form>
 </body>
