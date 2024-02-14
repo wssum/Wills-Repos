@@ -19,13 +19,13 @@ const employees = [
   {
     name: "Homer Simpson", 
     daysAvailable: [
-      {name: "Sunday", from: 9, to: 22}, 
-      {name: "Monday", from: 9, to: 22}, 
-      {name: "Tuesday", from: 9, to: 22}, 
-      {name: "Wednesday", from: 9, to: 22}, 
-      {name: "Thursday", from: 9, to: 23}, 
-      {name: "Friday", from: 9, to: 24}, 
-      {name: "Saturday", from: 8, to: 24}
+      {name: "Sunday", from: 7, to: 24}, 
+      {name: "Monday", from: 7, to: 24}, 
+      {name: "Tuesday", from: 7, to: 24}, 
+      {name: "Wednesday", from: 7, to: 24}, 
+      {name: "Thursday", from: 7, to: 24}, 
+      {name: "Friday", from: 7, to: 24}, 
+      {name: "Saturday", from: 7, to: 24}
     ]
   },
   {
@@ -40,43 +40,43 @@ const employees = [
   {
     name: "Avery Man", 
     daysAvailable: [
-      {name: "Thursday", from: 9, to: 14}, 
-      {name: "Friday", from: 9, to: 14}, 
-      {name: "Saturday", from: 8, to: 14}, 
-      {name: "Sunday", from: 9, to: 14}
+      {name: "Thursday", from: 7, to: 14}, 
+      {name: "Friday", from: 7, to: 14}, 
+      {name: "Saturday", from: 7, to: 14}, 
+      {name: "Sunday", from: 7, to: 14}
     ]
   },
   {
     name: "Marge Simpson",
     daysAvailable: [
-      {name: "Monday", from: 9, to: 22}, 
-      {name: "Wednesday", from: 9, to: 22},
-      {name: "Thursday", from: 9, to: 14}, 
-      {name: "Friday", from: 9, to: 24}
+      {name: "Monday", from: 7, to: 24}, 
+      {name: "Wednesday", from: 7, to: 24},
+      {name: "Thursday", from: 7, to: 14}, 
+      {name: "Friday", from: 7, to: 24}
     ]
   },
   {
     name: "Tony Lau",
     daysAvailable: [
-      {name: "Tuesday", from: 9, to: 22}, 
-      {name: "Thursday", from: 9, to: 23},
+      {name: "Tuesday", from: 7, to: 24}, 
+      {name: "Thursday", from: 7, to: 24},
       {name: "Friday", from: 15, to: 24}, 
-      {name: "Saturday", from: 8, to: 24}
+      {name: "Saturday", from: 7, to: 24}
     ]
   },
   {
       name: "Ray Gibson",
       daysAvailable: [
-       {name: "Saturday", from: 8, to: 14},
+       {name: "Saturday", from: 7, to: 14},
         {name: "Friday", from: 15, to: 24}, 
-        {name: "Thursday", from: 9, to: 23}
+        {name: "Thursday", from: 7, to: 24}
       ]
     },
     {
       name: "Billy Jeans",
       daysAvailable: [
        {name: "Saturday", from: 15, to: 24},
-        {name: "Sunday", from: 9, to: 22}
+        {name: "Sunday", from: 7, to: 24}
       ]
     }
 ];
@@ -164,18 +164,18 @@ function whichShift(worker, workDay) {
   let shift = null;
   worker.daysAvailable.forEach((shiftDay) => {
       if (shiftDay.name.toLowerCase() === workDay.day.toLowerCase()) {
-          if (shiftDay.from == workDay.open && shiftDay.to < workDay.close) {
+          if (shiftDay.from <= workDay.open && shiftDay.to < workDay.close) {
               if(workDay.opener.length < workDay.openersRequired)
               {
                   shift = "O";
               }
-          } else if (shiftDay.from > workDay.open && shiftDay.to == workDay.close) {
+          } else if (shiftDay.from > workDay.open && shiftDay.to >= workDay.close) {
               if(workDay.closer.length < workDay.closersRequired)
               {
                   shift = "C";
               }
 
-          } else if (shiftDay.from == workDay.open && shiftDay.to == workDay.close) {
+          } else if (shiftDay.from <= workDay.open && shiftDay.to >= workDay.close) {
               if(workDay.allAround.length < workDay.allAroundsRequired)
               {
                   shift = "A";
