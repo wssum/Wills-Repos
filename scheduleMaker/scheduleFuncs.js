@@ -135,7 +135,7 @@ let schedule = [
     closersRequired: 2,
     allAroundsRequired: 2, 
     open: 9,
-    close: 24
+    close: 23
   },
   {
     day: "Saturday",
@@ -146,7 +146,7 @@ let schedule = [
     closersRequired: 2,
     allAroundsRequired: 2, 
     open: 8,
-    close: 24
+    close: 23
   },
   {
     day: "Sunday",
@@ -194,7 +194,48 @@ function whichShift(worker, workDay) {
   return shift;
 }
 
-//make days have anouther attribute for each for number of openenrs, closers and allaround
+/*
+function makeSchedule(workers) {
+  schedule.forEach(function(date) {
+      workers.forEach((worker) => {
+          const isAvailable = worker.daysAvailable.some(workerDay => workerDay.name.toLowerCase() === date.day.toLowerCase());
+          
+          if (isAvailable) {
+              if ((whichShift(worker,date)== "A") && date.allAround.length < date.allAroundsRequired) {
+                  if(!date.allAround.some(workMan=>workMan.name == worker.name))
+                  {
+                      date.allAround.push(worker);
+                  }
+              } else if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
+                  if(!date.opener.some(workMan=>workMan.name == worker.name))
+                  {
+                      date.opener.push(worker);  
+                  }
+              } else if ((whichShift(worker,date)== "C") && (date.closer.length < date.closersRequired)) {
+                  if(!date.closer.some(workMan=>workMan.name == worker.name))
+                  {
+                      date.closer.push(worker);
+                  }
+              }
+              else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "O"))
+              {
+                  if(!date.opener.some(workMan=>workMan.name == worker.name))
+                  {
+                      date.opener.push(worker);  
+                  }
+              }
+              else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "C"))
+              {
+                  if(!date.closer.some(workMan=>workMan.name == worker.name))
+                  {
+                      date.closer.push(worker);
+                  }
+              }
+          }
+      });
+  });
+}*/
+//for testing only
 function makeSchedule(workers) {
   schedule.forEach(function(date) {
       workers.forEach((worker) => {
@@ -346,20 +387,23 @@ function newWorker(employ)
 {
   return new Promise((resolve,reject)=>{
    try{
+    let availability= [
+      {name: "Monday", from: employ.monAvailFrom, to: employ.monAvailTo},
+      {name: "Tuesday", from: employ.tuesAvailFrom, to: employ.tuesAvailTo},
+      {name: "Wednesday", from: employ.wedAvailFrom, to: employ.wedAvailTo},
+      {name: "Thursday", from: employ.thursAvailFrom, to: employ.thursAvailTo},
+      {name: "Friday", from: employ.friAvailFrom, to: employ.friAvailTo},
+      {name: "Saturday", from: employ.satAvailFrom, to: employ.satAvailTo},
+      {name: "Sunday", from: employ.sunAvailFrom, to: employ.sunAvailTo}
+    ];
+    let daysAvailable = availability.filter(day=>day.from && day.to);
     let newEmployee = {
       name: employ.empName,
-      daysAvailable: [
-        {name: "Monday", from: employ.monAvailFrom, to: employ.monAvailTo},
-        {name: "Tuesday", from: employ.tuesAvailFrom, to: employ.tuesAvailTo},
-        {name: "Wednesday", from: employ.wedAvailFrom, to: employ.wedAvailTo},
-        {name: "Thursday", from: employ.thursAvailFrom, to: employ.thursAvailTo},
-        {name: "Friday", from: employ.friAvailFrom, to: employ.friAvailTo},
-        {name: "Saturday", from: employ.satAvailFrom, to: employ.satAvailTo},
-        {name: "Sunday", from: employ.sunAvailFrom, to: employ.sunAvailTo}
-      ]
+      daysAvailable
     };
+
    employees.push(newEmployee);
-   console.log(employees);
+   console.log(newEmployee.daysAvailable[0]);
    resolve(employees);    
    }catch(error)
    {
