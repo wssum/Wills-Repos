@@ -194,7 +194,9 @@ function whichShift(worker, workDay) {
   return shift;
 }
 
-/*
+
+
+
 function makeSchedule(workers) {
   schedule.forEach(function(date) {
       workers.forEach((worker) => {
@@ -234,9 +236,9 @@ function makeSchedule(workers) {
           }
       });
   });
-}*/
+}
 //for testing only
-function makeSchedule(workers) {
+/*function makeSchedule(workers) {
   schedule.forEach(function(date) {
       workers.forEach((worker) => {
           const isAvailable = worker.daysAvailable.some(workerDay => workerDay.name.toLowerCase() === date.day.toLowerCase());
@@ -276,13 +278,13 @@ function makeSchedule(workers) {
       });
   });
 }
-
+*/
 function scheduleReq(daysOfWork)
 {
   return new Promise((resolve,reject)=>
   {
     try{
-      let workDays = []; // Assuming this array is meant to store all day objects
+      let workDays = []; 
 
       let sun = {
           opener: [],
@@ -403,7 +405,6 @@ function newWorker(employ)
     };
 
    employees.push(newEmployee);
-   console.log(newEmployee.daysAvailable[0]);
    resolve(employees);    
    }catch(error)
    {
@@ -412,8 +413,5 @@ function newWorker(employ)
   });
 }
 
-makeSchedule(employees);
-
-console.log(schedule);
 
 module.exports ={makeSchedule,schedule,employees,whichShift,scheduleReq,newWorker};

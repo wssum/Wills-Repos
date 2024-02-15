@@ -1,7 +1,7 @@
 let express = require("express");
 let app = express();
 let scheduleFuncs = require("./scheduleFuncs");
-let port = process.env.port || 8080;
+let port = process.env.port || 8081;
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(express.static("public"));
@@ -23,6 +23,11 @@ app.post("/editSchedule",(req,res)=>{
 
     app.get("/newEmployee",(req,res)=>{
         res.render("newEmployee",);
+    });
+
+    app.get("/scheduleForNextWeek",(req,res)=>{
+       scheduleFuncs.makeSchedule(scheduleFuncs.employees);
+       res.render("finalSchedule",{data:scheduleFuncs.schedule});
     });
 
 app.post("/newEmployee",(req,res)=>{

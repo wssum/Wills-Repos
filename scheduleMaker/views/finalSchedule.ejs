@@ -1,0 +1,30 @@
+<html>
+<body>
+    <ul>
+        <% data.forEach(function(workDay) { %>
+            <li><%= workDay.day %>
+                <ul>
+                    <% workDay.opener.forEach(function(morn) { %>
+                        <% let amToPrint = (workDay.open >= 12) ? ((workDay.open - 12) || 12) + 'PM' : workDay.open + 'AM'; %>
+                        <% let pmToPrint = ''; %>
+                        <li><%= morn.name %></li>
+                        <% morn.daysAvailable.forEach(function(exactDay) { %>
+                            <% if(workDay.day === exactDay.name) { %>
+                                <% let mornTo = workDay.open + 6; %>
+                                <% if(mornTo >= 12) { %>
+                                    <% pmToPrint = ((mornTo - 12) || 12) + 'PM'; %>
+                                <% } else { %>
+                                    <% pmToPrint = mornTo + 'AM'; %>
+                                <% } %>
+                            <% } %>
+                        <% }); %>
+                        <% if(pmToPrint) { %>
+                            <li><%= amToPrint %> - <%= pmToPrint %></li>
+                        <% } %>
+                    <% }); %>
+                </ul>
+            </li>
+        <% }); %>
+    </ul>
+</body>
+</html>
