@@ -3,10 +3,12 @@
         <link rel="stylesheet" type="text/css" href="/css/main.css">
     </head>
 <body>
+    <%-include('partials/navbar')%>
     <form action = "/editEmployee" method = "post">
        <label for = "findWorker">Employees Log</label>
        <input type = "text" id = "findWorker" placeholder= "Employee Name">
         <input type="submit" placeholder="submit">
     </form>
+    
 </body>
 </html>

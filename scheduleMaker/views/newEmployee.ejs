@@ -3,6 +3,7 @@
         <link rel="stylesheet" type="text/css" href="/css/main.css">
     </head>
 <body>
+    <%-include('partials/navbar')%>
     <form action = "/newEmployee" method = "post">
         <label for = "employeeName">Employee Name:</label>
         <input id = "employeeName" type = "text" name = "empName" placeholder="Enter Name">
@@ -53,5 +54,6 @@
 
         <input type="submit" placeholder="submit">
     </form>
+    
 </body>
 </html>

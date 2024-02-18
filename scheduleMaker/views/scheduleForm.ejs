@@ -1,8 +1,9 @@
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="/css/main.css">
+      <link rel="stylesheet" type="text/css" href="/css/main.css">
     </head>
 <body>
+  <%-include('partials/navbar')%>
     <form action = "/editSchedule" method = "post">
         <label for = "openMon"><h2 class="text-xl">
             Monday
@@ -176,12 +177,12 @@
             Sunday
             <span class="badge badge-lg">Open From</span>
           </h2></label>
-        <input type="number" id="openSun" name = "sunOpen" min = 7 max = 24>
+        <input type="number" id="openSun" name = "sunOpen" min = 7 max = 13>
         
         <label for = "closeSun"><h2 class="text-xl">
             <span class="badge badge-lg">Open To</span>
           </h2></label>
-        <input type="number" id="closeSun" name = "sunClose" min = 7 max = 24>
+        <input type="number" id="closeSun" name = "sunClose" min = 16 max = 24>
 
         <label for = "openersSun"><h2 class="text-xl">
             <span class="badge badge-lg">Openers Required</span>
