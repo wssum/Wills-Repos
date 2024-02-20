@@ -71,7 +71,8 @@ function makeSchedule() {
     .then(data => {
       const schedule = data.schedule;
       const workers = data.employees;
-      
+      console.log(schedule);
+      console.log(workers);
       schedule.forEach(date => {
         workers.forEach(worker => {
           const isAvailable = worker.daysAvailable.some(workerDay => workerDay.name.toLowerCase() === date.day.toLowerCase());
@@ -228,5 +229,76 @@ async function scheduleReq(daysOfWork)
   }
 }
 
+function findEmployee(empName) {
+  return new Promise((resolve, reject) => {
+    Managers.aggregate([
+      {
+        $match: {
+          "managerName": "Wilson Sum"
+        }
+      },
+      {
+        $unwind: "$employees"
+      },
+      {
+        $match: {
+          "employees.name": empName.workerName // Ensure empName is correctly referenced here
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          employees: 1
+        }
+      }
+    ])
+    .then(results => {
+      console.log(results);
+      resolve(results); // Resolve the promise with the results
+    })
+    .catch(err => {
+      console.error(err);
+      reject(err); // Reject the promise if there's an error
+    });
+  });
+}
 
-module.exports ={makeSchedule,whichShift,Managers,newWorker,scheduleReq};
+
+async function editEmployee(empToEdit) {
+  let availability = [
+    {name: "Monday", from: empToEdit.monAvailFrom, to: empToEdit.monAvailTo},
+    {name: "Tuesday", from: empToEdit.tuesAvailFrom, to: empToEdit.tuesAvailTo},
+    {name: "Wednesday", from: empToEdit.wedAvailFrom, to: empToEdit.wedAvailTo},
+    {name: "Thursday", from: empToEdit.thursAvailFrom, to: empToEdit.thursAvailTo},
+    {name: "Friday", from: empToEdit.friAvailFrom, to: empToEdit.friAvailTo},
+    {name: "Saturday", from: empToEdit.satAvailFrom, to: empToEdit.satAvailTo},
+    {name: "Sunday", from: empToEdit.sunAvailFrom, to: empToEdit.sunAvailTo}
+  ];
+
+  const daysAvailable = availability.filter(day => day.from && day.to);
+
+  if(!empToEdit.deleteOrNot){
+    try {
+      await Managers.updateOne(
+        { managerName: "Wilson Sum", "employees.name": empToEdit.empName },
+        { $set: { "employees.$.daysAvailable": daysAvailable } }
+      );
+    } catch (err) {
+      console.error("Error updating employee:", err);
+    }
+  }else{
+    try {
+      await Managers.updateOne(
+        { managerName: "Wilson Sum" },
+        { $pull: { "employees": { "name": empToEdit.empName } } }      
+      );
+    } catch (err) {
+      console.error("Error updating employee:", err);
+    }
+  }
+
+}
+
+
+module.exports ={makeSchedule,whichShift,Managers,newWorker,scheduleReq,findEmployee,editEmployee};
+

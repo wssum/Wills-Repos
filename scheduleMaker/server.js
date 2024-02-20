@@ -21,15 +21,9 @@ app.post("/editSchedule",(req,res)=>{
     }).catch(err=>console.log(err));
   
     });
-
+    
     app.get("/newEmployee",(req,res)=>{
         res.render("newEmployee",);
-    });
-
-    app.get("/scheduleForNextWeek",(req,res)=>{
-       scheduleFuncs.makeSchedule().then((schedule)=>{
-        res.render("finalSchedule",{data:schedule});
-       })
     });
 
 app.post("/newEmployee",(req,res)=>{
@@ -38,5 +32,28 @@ app.post("/newEmployee",(req,res)=>{
     }).catch(err=>console.log(err));
   
     });
+
+    app.get("/findEmployee",(req,res)=>{
+        res.render("findEmployee",);
+    });
+
+    app.post("/findEmployee", (req, res) => {
+        scheduleFuncs.findEmployee(req.body).then((data) => {
+            const employeeToEdit = data[0].employees; 
+            res.render("editEmployee", { workerToEdit: employeeToEdit });
+        }).catch(err => console.log(err));
+    });
+
+    app.post("/editEmployee", (req, res) => {
+        scheduleFuncs.editEmployee(req.body).then((data) => {
+            res.render("home");
+        }).catch(err => console.log(err));
+    });
+
+    app.get("/scheduleForNextWeek",(req,res)=>{
+        scheduleFuncs.makeSchedule().then((schedule)=>{
+         res.render("finalSchedule",{data:schedule});
+        })
+     });
 
 app.listen(port,()=>(console.log(`Standing by on port ${port}`)));
