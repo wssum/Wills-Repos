@@ -6,9 +6,6 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(express.static('public'));
 
-app.get("/",(req,res)=>{
-res.render("home");
-});
 
 app.get("/editSchedule",(req,res)=>{
         res.render("scheduleForm");
@@ -39,10 +36,18 @@ app.post("/newEmployee",(req,res)=>{
 
     app.post("/findEmployee", (req, res) => {
         scheduleFuncs.findEmployee(req.body).then((data) => {
-            const employeeToEdit = data[0].employees; 
-            res.render("editEmployee", { workerToEdit: employeeToEdit });
-        }).catch(err => console.log(err));
+            if (data.length && data[0].employees && data[0].employees.length) {
+                const employeeToEdit = data[0].employees; 
+                res.render("editEmployee", { workerToEdit: employeeToEdit });
+            } else {
+                res.render("404", { message: "Employee not found." }); 
+            }
+        }).catch(err => {
+            console.log(err);
+            res.status(500).render("error", { error: "An error occurred while searching for the employee." });
+        });
     });
+    
 
     app.post("/editEmployee", (req, res) => {
         scheduleFuncs.editEmployee(req.body).then((data) => {
@@ -50,7 +55,7 @@ app.post("/newEmployee",(req,res)=>{
         }).catch(err => console.log(err));
     });
 
-    app.get("/scheduleForNextWeek",(req,res)=>{
+    app.get("/",(req,res)=>{
         scheduleFuncs.makeSchedule().then((schedule)=>{
          res.render("finalSchedule",{data:schedule});
         })

@@ -4,9 +4,16 @@
     </head>
 <body>
     <%-include('partials/navbar')%>
+    <button id=" reorderSchedule">Remake Schedule</button>
+    <script src="/scheduleFuncs.js">
+     let scheduleButton = document.getElementById("reorderSchedule");
+     scheduleButton.addEventListener("click",function(){
+         newSchedule();
+     })
+    </script>
     <ul>
         <% data.forEach(function(workDay) { %>
-           
+          
             <li><%= workDay.day %>
                 <ul>
                     <% workDay.opener.forEach(function(openerShift) { %>

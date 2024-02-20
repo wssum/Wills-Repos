@@ -79,31 +79,41 @@ function makeSchedule() {
 
           if (isAvailable) {
             if ((whichShift(worker,date)== "A") && date.allAround.length < date.allAroundsRequired) {
-                if(!date.allAround.some(workMan=>workMan.name == worker.name))
+                if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
+                !date.opener.some(workMan=>workMan.name === worker.name)&&
+                !date.closer.some(workMan=>workMan.name === worker.name))
                 {
                     date.allAround.push(worker);
                 }
             } if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
-                if(!date.opener.some(workMan=>workMan.name == worker.name))
+              if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
+              !date.opener.some(workMan=>workMan.name === worker.name)&&
+              !date.closer.some(workMan=>workMan.name === worker.name))
                 {
                     date.opener.push(worker);  
                 }
             } else if ((whichShift(worker,date)== "C") && (date.closer.length < date.closersRequired)) {
-                if(!date.closer.some(workMan=>workMan.name == worker.name))
+              if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
+              !date.opener.some(workMan=>workMan.name === worker.name)&&
+              !date.closer.some(workMan=>workMan.name === worker.name))
                 {
                     date.closer.push(worker);
                 }
             }
             else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "O"))
             {
-                if(!date.opener.some(workMan=>workMan.name == worker.name))
+              if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
+              !date.opener.some(workMan=>workMan.name === worker.name)&&
+              !date.closer.some(workMan=>workMan.name === worker.name))
                 {
                     date.opener.push(worker);  
                 }
             }
             else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "C"))
             {
-                if(!date.closer.some(workMan=>workMan.name == worker.name))
+              if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
+              !date.opener.some(workMan=>workMan.name === worker.name)&&
+              !date.closer.some(workMan=>workMan.name === worker.name))
                 {
                     date.closer.push(worker);
                 }
@@ -263,6 +273,28 @@ function findEmployee(empName) {
   });
 }
 
+function newSchedule() {
+  Managers.find({managerName: "Wilson Sum", employees: true, _id: 0}).then((listOfWorkers) => {
+    if (listOfWorkers.length > 0 && listOfWorkers[0].employees) {
+      let employees = listOfWorkers[0].employees; 
+      for (let i = employees.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [employees[i], employees[j]] = [employees[j], employees[i]];
+      }
+      Managers.updateOne({managerName: "Wilson Sum"}, {$set: {employees: employees}})
+        .then(updateResult => {
+          console.log('Update success:', updateResult);
+        })
+        .catch(err => {
+          console.error('Error updating employees:', err);
+        });
+    } else {
+      console.log('Manager not found or no employees array in the document');
+    }
+  }).catch(err => {
+    console.log('Error fetching manager and employees:', err);
+  });
+}
 
 async function editEmployee(empToEdit) {
   let availability = [
@@ -300,5 +332,5 @@ async function editEmployee(empToEdit) {
 }
 
 
-module.exports ={makeSchedule,whichShift,Managers,newWorker,scheduleReq,findEmployee,editEmployee};
+module.exports ={makeSchedule,whichShift,Managers,newWorker,scheduleReq,newSchedule,findEmployee,editEmployee};
 
