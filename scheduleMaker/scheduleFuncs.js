@@ -1,165 +1,36 @@
-const employees = [
-  {
-    name: "Athrun Zala",
-    daysAvailable: [
-      {name: "Sunday", from: 9, to: 14},
-      {name: "Monday", from: 9, to: 14}, 
-      {name: "Tuesday", from: 10, to: 22}, 
-      {name: "Wednesday", from: 9, to: 14}
-    ]
-  },
-  {
-    name: "Greg Capall",
-    daysAvailable: [
-      {name: "Thursday", from: 15, to: 23}, 
-      {name: "Friday", from: 15, to: 22}, 
-      {name: "Saturday", from: 15, to: 24}
-    ]
-  },
-  {
-    name: "Homer Simpson", 
-    daysAvailable: [
-      {name: "Sunday", from: 7, to: 24}, 
-      {name: "Monday", from: 7, to: 24}, 
-      {name: "Tuesday", from: 7, to: 24}, 
-      {name: "Wednesday", from: 7, to: 24}, 
-      {name: "Thursday", from: 7, to: 24}, 
-      {name: "Friday", from: 7, to: 24}, 
-      {name: "Saturday", from: 7, to: 24}
-    ]
-  },
-  {
-    name: "Will Sum",
-    daysAvailable: [
-      {name: "Monday", from: 15, to: 22}, 
-      {name: "Tuesday", from: 15, to: 22}, 
-      {name: "Wednesday", from: 15, to: 22}, 
-      {name: "Sunday", from: 15, to: 22}
-    ]
-  },
-  {
-    name: "Avery Man", 
-    daysAvailable: [
-      {name: "Thursday", from: 7, to: 14}, 
-      {name: "Friday", from: 7, to: 14}, 
-      {name: "Saturday", from: 7, to: 14}, 
-      {name: "Sunday", from: 7, to: 14}
-    ]
-  },
-  {
-    name: "Marge Simpson",
-    daysAvailable: [
-      {name: "Monday", from: 7, to: 24}, 
-      {name: "Wednesday", from: 7, to: 24},
-      {name: "Thursday", from: 7, to: 14}, 
-      {name: "Friday", from: 7, to: 24}
-    ]
-  },
-  {
-    name: "Tony Lau",
-    daysAvailable: [
-      {name: "Tuesday", from: 7, to: 24}, 
-      {name: "Thursday", from: 7, to: 24},
-      {name: "Friday", from: 15, to: 24}, 
-      {name: "Saturday", from: 7, to: 24}
-    ]
-  },
-  {
-      name: "Ray Gibson",
-      daysAvailable: [
-       {name: "Saturday", from: 7, to: 14},
-        {name: "Friday", from: 15, to: 24}, 
-        {name: "Thursday", from: 7, to: 24}
-      ]
-    },
-    {
-      name: "Billy Jeans",
-      daysAvailable: [
-       {name: "Saturday", from: 15, to: 24},
-        {name: "Sunday", from: 7, to: 24}
-      ]
-    }
-];
+const mongoose = require('mongoose');
+const schema = mongoose.Schema;
+const db = mongoose.createConnection('mongodb+srv://wssum:7895123Zz@wssumcluster.mtthdw5.mongodb.net/managers')
+const managerSchema = new schema({
+  managerName: String,
+  employees: [{name: String,
+  daysAvailable:[{name: String, 
+    from: Number, 
+    to: Number}]}],
+schedule: [{
+    day: String,
+    opener: [{name: String,
+      daysAvailable:[{name: String, 
+        from: Number, 
+        to: Number}]}],
+    closer: [{name: String,
+      daysAvailable:[{name: String, 
+        from: Number, 
+        to: Number}]}],
+    allAround: [{name: String,
+      daysAvailable:[{name: String, 
+        from: Number, 
+        to: Number}]}],
+    openersRequired: Number,
+    closersRequired: Number,
+    allAroundsRequired: Number,
+    open: Number,
+    close: Number
+  }]
+});
 
-let schedule = [
-  {
-    day: "Monday",
-    opener: [],
-    closer: [],
-    allAround: [],
-    openersRequired: 1,
-    closersRequired: 1,
-    allAroundsRequired: 1,
-    open: 9,
-    close: 22
-  },
-  {
-    day: "Tuesday",
-    opener: [],
-    closer: [],
-    allAround: [],
-    openersRequired: 1,
-    closersRequired: 1,
-    allAroundsRequired: 1,
-    open: 9,
-    close: 22
-  },
-  {
-    day: "Wednesday",
-    opener: [],
-    closer: [],
-    allAround: [],
-    openersRequired: 1,
-    closersRequired: 1,
-    allAroundsRequired: 2, 
-    open: 9,
-    close: 22
-  },
-  {
-    day: "Thursday",
-    opener: [],
-    closer: [],
-    allAround: [],
-    openersRequired: 1,
-    closersRequired: 2,
-    allAroundsRequired: 2, 
-    open: 9,
-    close: 23
-  },
-  {
-    day: "Friday",
-    opener: [],
-    closer: [],
-    allAround: [],
-    openersRequired: 1,
-    closersRequired: 2,
-    allAroundsRequired: 2, 
-    open: 9,
-    close: 23
-  },
-  {
-    day: "Saturday",
-    opener: [],
-    closer: [],
-    allAround: [],
-    openersRequired: 2,
-    closersRequired: 2,
-    allAroundsRequired: 2, 
-    open: 8,
-    close: 23
-  },
-  {
-    day: "Sunday",
-    opener: [],
-    closer: [],
-    allAround: [],
-    openersRequired: 1,
-    closersRequired: 1,
-    allAroundsRequired: 2, 
-    open: 9,
-    close: 22
-  }
-];
+const Managers = db.model("Managers",managerSchema);
+
 function whichShift(worker, workDay) {
   let shift = null;
   worker.daysAvailable.forEach((shiftDay) => {
@@ -195,98 +66,63 @@ function whichShift(worker, workDay) {
 }
 
 
+function makeSchedule() {
+  return Managers.findOne({ managerName: "Wilson Sum" })
+    .then(data => {
+      const schedule = data.schedule;
+      const workers = data.employees;
+      
+      schedule.forEach(date => {
+        workers.forEach(worker => {
+          const isAvailable = worker.daysAvailable.some(workerDay => workerDay.name.toLowerCase() === date.day.toLowerCase());
+
+          if (isAvailable) {
+            if ((whichShift(worker,date)== "A") && date.allAround.length < date.allAroundsRequired) {
+                if(!date.allAround.some(workMan=>workMan.name == worker.name))
+                {
+                    date.allAround.push(worker);
+                }
+            } if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
+                if(!date.opener.some(workMan=>workMan.name == worker.name))
+                {
+                    date.opener.push(worker);  
+                }
+            } else if ((whichShift(worker,date)== "C") && (date.closer.length < date.closersRequired)) {
+                if(!date.closer.some(workMan=>workMan.name == worker.name))
+                {
+                    date.closer.push(worker);
+                }
+            }
+            else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "O"))
+            {
+                if(!date.opener.some(workMan=>workMan.name == worker.name))
+                {
+                    date.opener.push(worker);  
+                }
+            }
+            else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "C"))
+            {
+                if(!date.closer.some(workMan=>workMan.name == worker.name))
+                {
+                    date.closer.push(worker);
+                }
+            }
+        }  
+        });
+      });
+      return schedule;
+    })
+    .catch(error => {
+      throw error;
+    });
+}
 
 
-function makeSchedule(workers) {
-  schedule.forEach(function(date) {
-      workers.forEach((worker) => {
-          const isAvailable = worker.daysAvailable.some(workerDay => workerDay.name.toLowerCase() === date.day.toLowerCase());
-          
-          if (isAvailable) {
-              if ((whichShift(worker,date)== "A") && date.allAround.length < date.allAroundsRequired) {
-                  if(!date.allAround.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.allAround.push(worker);
-                  }
-              } else if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
-                  if(!date.opener.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.opener.push(worker);  
-                  }
-              } else if ((whichShift(worker,date)== "C") && (date.closer.length < date.closersRequired)) {
-                  if(!date.closer.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.closer.push(worker);
-                  }
-              }
-              else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "O"))
-              {
-                  if(!date.opener.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.opener.push(worker);  
-                  }
-              }
-              else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "C"))
-              {
-                  if(!date.closer.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.closer.push(worker);
-                  }
-              }
-          }
-      });
-  });
-}
-//for testing only
-/*function makeSchedule(workers) {
-  schedule.forEach(function(date) {
-      workers.forEach((worker) => {
-          const isAvailable = worker.daysAvailable.some(workerDay => workerDay.name.toLowerCase() === date.day.toLowerCase());
-          
-          if (isAvailable) {
-              if ((whichShift(worker,date)== "A") && date.allAround.length < date.allAroundsRequired) {
-                  if(!date.allAround.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.allAround.push(worker.name);
-                  }
-              } else if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
-                  if(!date.opener.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.opener.push(worker.name);  
-                  }
-              } else if ((whichShift(worker,date)== "C") && (date.closer.length < date.closersRequired)) {
-                  if(!date.closer.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.closer.push(worker.name);
-                  }
-              }
-              else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "O"))
-              {
-                  if(!date.opener.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.opener.push(worker.name);  
-                  }
-              }
-              else if((date.allAround.length >=1)&&(date.opener.length === 0)&&(whichShift(worker,date)== "C"))
-              {
-                  if(!date.closer.some(workMan=>workMan.name == worker.name))
-                  {
-                      date.closer.push(worker.name);
-                  }
-              }
-          }
-      });
-  });
-}
-*/
-function scheduleReq(daysOfWork)
+async function scheduleReq(daysOfWork)
 {
-  return new Promise((resolve,reject)=>
-  {
-    try{
-      let workDays = []; 
-
-      let sun = {
+  try{
+    let workDays = [
+      {
           opener: [],
           closer: [],
           allAround: [],
@@ -296,10 +132,7 @@ function scheduleReq(daysOfWork)
           closersRequired: daysOfWork.sunClosersRequired,
           open: daysOfWork.sunOpen,
           close: daysOfWork.sunClose,
-      };
-      workDays.push(sun);
-      
-      let mon = {
+      },{
           opener: [],
           closer: [],
           allAround: [],
@@ -309,10 +142,8 @@ function scheduleReq(daysOfWork)
           closersRequired: daysOfWork.monClosersRequired,
           open: daysOfWork.monOpen,
           close: daysOfWork.monClose,
-      };
-      workDays.push(mon);
-      
-      let tues = {
+      },
+      {
           opener: [],
           closer: [],
           allAround: [],
@@ -322,10 +153,7 @@ function scheduleReq(daysOfWork)
           closersRequired: daysOfWork.tuesClosersRequired,
           open: daysOfWork.tuesOpen,
           close: daysOfWork.tuesClose,
-      };
-      workDays.push(tues);
-      
-      let wed = {
+      },{
           opener: [],
           closer: [],
           allAround: [],
@@ -335,10 +163,7 @@ function scheduleReq(daysOfWork)
           closersRequired: daysOfWork.wedClosersRequired,
           open: daysOfWork.wedOpen,
           close: daysOfWork.wedClose,
-      };
-      workDays.push(wed);
-      
-      let thurs = {
+      },{
           opener: [],
           closer: [],
           allAround: [],
@@ -348,10 +173,7 @@ function scheduleReq(daysOfWork)
           closersRequired: daysOfWork.thursClosersRequired,
           open: daysOfWork.thursOpen,
           close: daysOfWork.thursClose,
-      };
-      workDays.push(thurs);
-      
-      let fri = {
+      },{
           opener: [],
           closer: [],
           allAround: [],
@@ -361,10 +183,7 @@ function scheduleReq(daysOfWork)
           closersRequired: daysOfWork.friClosersRequired,
           open: daysOfWork.friOpen,
           close: daysOfWork.friClose,
-      };
-      workDays.push(fri);
-      
-      let sat = {
+      },{
           opener: [],
           closer: [],
           allAround: [],
@@ -374,22 +193,20 @@ function scheduleReq(daysOfWork)
           closersRequired: daysOfWork.satClosersRequired,
           open: daysOfWork.satOpen,
           close: daysOfWork.satClose,
-      };
-      workDays.push(sat);
-      schedule = workDays;         
-      resolve(schedule);
-    }catch(error)
-    {
-       reject(error);
-    }
-  })
+      }]; 
+ const data = await Managers.updateOne({managerName:"Wilson Sum"},{$set:{schedule:workDays}});
+ console.log(data);
+  }
+  catch(err){
+    console.log(err);
+  }
+         
 }
 
-function newWorker(employ)
-{
-  return new Promise((resolve,reject)=>{
-   try{
-    let availability= [
+
+ async function newWorker(employ) {
+  try {
+    let availability = [
       {name: "Monday", from: employ.monAvailFrom, to: employ.monAvailTo},
       {name: "Tuesday", from: employ.tuesAvailFrom, to: employ.tuesAvailTo},
       {name: "Wednesday", from: employ.wedAvailFrom, to: employ.wedAvailTo},
@@ -398,20 +215,18 @@ function newWorker(employ)
       {name: "Saturday", from: employ.satAvailFrom, to: employ.satAvailTo},
       {name: "Sunday", from: employ.sunAvailFrom, to: employ.sunAvailTo}
     ];
-    let daysAvailable = availability.filter(day=>day.from && day.to);
+    let daysAvailable = availability.filter(day => day.from && day.to);
     let newEmployee = {
       name: employ.empName,
       daysAvailable
     };
 
-   employees.push(newEmployee);
-   resolve(employees);    
-   }catch(error)
-   {
-    console.log(error);
-   }
-  });
+    const data = await Managers.updateOne({managerName: "Wilson Sum"}, {$push: {employees: newEmployee}});
+    console.log(data); // This will log the result of the update operation
+  } catch (err) {
+    console.log(err); // This will log any errors that occur during the update
+  }
 }
 
 
-module.exports ={makeSchedule,schedule,employees,whichShift,scheduleReq,newWorker};
+module.exports ={makeSchedule,whichShift,Managers,newWorker,scheduleReq};

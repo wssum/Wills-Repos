@@ -11,12 +11,13 @@ res.render("home");
 });
 
 app.get("/editSchedule",(req,res)=>{
-        res.render("scheduleForm",);
+        res.render("scheduleForm");
+    
     });
 
 app.post("/editSchedule",(req,res)=>{
     scheduleFuncs.scheduleReq(req.body).then((data)=>{
-        res.render("scheduleForm",);
+        res.render("scheduleForm");
     }).catch(err=>console.log(err));
   
     });
@@ -26,8 +27,9 @@ app.post("/editSchedule",(req,res)=>{
     });
 
     app.get("/scheduleForNextWeek",(req,res)=>{
-       scheduleFuncs.makeSchedule(scheduleFuncs.employees);
-       res.render("finalSchedule",{data:scheduleFuncs.schedule});
+       scheduleFuncs.makeSchedule().then((schedule)=>{
+        res.render("finalSchedule",{data:schedule});
+       })
     });
 
 app.post("/newEmployee",(req,res)=>{
