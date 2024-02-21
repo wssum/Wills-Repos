@@ -34,13 +34,10 @@ app.post("/editSchedule",(req,res)=>{
 
     app.post("/createAccount",(req,res)=>{
         scheduleFuncs.createUser(req.body).then((data)=>{
-            if(data)
-            {
-                res.render("loginOrCreate");
-            }           
+            res.render("loginOrCreate");     
         }).catch(err=>{
             console.log(err);
-            res.render("/createAccount",{errorMsg:"Unable to make account. Please try again."});
+            res.render("errorCreateAccount");
         })
         
     });
