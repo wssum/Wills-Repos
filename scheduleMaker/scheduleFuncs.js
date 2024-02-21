@@ -158,8 +158,11 @@ function createUser(userInfo) {
         }).catch(error => {
           console.error('Error creating manager:', error);
         }); 
+        resolve();
       }
-      resolve();
+      else{
+        reject();
+      }
     }catch(err)
     {
       reject(err);

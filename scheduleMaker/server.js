@@ -27,13 +27,20 @@ app.post("/editSchedule",(req,res)=>{
         res.render("createAccount",);
     });
 
+    
+    app.get("/errorCreateAccount",(req,res)=>{
+        res.render("errorCreateAccount",);
+    });
 
     app.post("/createAccount",(req,res)=>{
-        scheduleFuncs.createUser(req.body).then(()=>{
-            res.render("loginOrCreate");
+        scheduleFuncs.createUser(req.body).then((data)=>{
+            if(data)
+            {
+                res.render("loginOrCreate");
+            }           
         }).catch(err=>{
             console.log(err);
-            res.render("createAccount");
+            res.render("/createAccount",{errorMsg:"Unable to make account. Please try again."});
         })
         
     });
@@ -55,12 +62,9 @@ app.post("/newEmployee",(req,res)=>{
             if (data) {
                 const employeeToEdit = data[0].employees; 
                 res.render("editEmployee", { workerToEdit: employeeToEdit });
-            } else {
-                res.render("404", { message: "Employee not found." }); 
-            }
+            } 
         }).catch(err => {
-            console.log(err);
-            res.status(500).render("error", { error: "An error occurred while searching for the employee." });
+          res.render("errorEmployee");
         });
     });
     
@@ -86,6 +90,8 @@ app.post("/newEmployee",(req,res)=>{
         scheduleFuncs.validateCredentials(req.body).then((data)=>{
             console.log(scheduleFuncs.manager);
          res.redirect("/currentSchedule");
+        }).catch((err)=>{
+            res.render("errorLogin");  
         })
      });
 
