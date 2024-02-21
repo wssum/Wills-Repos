@@ -23,6 +23,22 @@ app.post("/editSchedule",(req,res)=>{
         res.render("newEmployee",);
     });
 
+    app.get("/createAccount",(req,res)=>{
+        res.render("createAccount",);
+    });
+
+
+    app.post("/createAccount",(req,res)=>{
+        scheduleFuncs.createUser(req.body).then(()=>{
+            res.render("loginOrCreate");
+        }).catch(err=>{
+            console.log(err);
+            res.render("createAccount");
+        })
+        
+    });
+
+
 app.post("/newEmployee",(req,res)=>{
     scheduleFuncs.newWorker(req.body).then((data)=>{
         res.render("newEmployee",);
@@ -36,7 +52,7 @@ app.post("/newEmployee",(req,res)=>{
 
     app.post("/findEmployee", (req, res) => {
         scheduleFuncs.findEmployee(req.body).then((data) => {
-            if (data.length && data[0].employees && data[0].employees.length) {
+            if (data) {
                 const employeeToEdit = data[0].employees; 
                 res.render("editEmployee", { workerToEdit: employeeToEdit });
             } else {
@@ -54,10 +70,22 @@ app.post("/newEmployee",(req,res)=>{
             res.render("home");
         }).catch(err => console.log(err));
     });
-
-    app.get("/",(req,res)=>{
+ 
+    
+    app.get("/currentSchedule",(req,res)=>{
         scheduleFuncs.makeSchedule().then((schedule)=>{
          res.render("finalSchedule",{data:schedule});
+        })
+     });
+
+     app.get("/",(req,res)=>{
+         res.render("loginOrCreate");
+     });
+
+     app.post("/",(req,res)=>{
+        scheduleFuncs.validateCredentials(req.body).then((data)=>{
+            console.log(scheduleFuncs.manager);
+         res.redirect("/currentSchedule");
         })
      });
 

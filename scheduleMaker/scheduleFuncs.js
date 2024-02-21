@@ -2,23 +2,36 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 const db = mongoose.createConnection('mongodb+srv://wssum:7895123Zz@wssumcluster.mtthdw5.mongodb.net/managers')
 const managerSchema = new schema({
-  managerName: String,
+  userName: {
+    unique:true,
+    type:String
+  },
+  passWord:String,
   employees: [{name: String,
+    _id: false,
   daysAvailable:[{name: String, 
     from: Number, 
-    to: Number}]}],
+    to: Number,
+    _id: false}]}],
 schedule: [{
     day: String,
+    _id: false,
     opener: [{name: String,
-      daysAvailable:[{name: String, 
+      _id: false,
+      daysAvailable:[{name: String,
+        _id: false, 
         from: Number, 
         to: Number}]}],
     closer: [{name: String,
-      daysAvailable:[{name: String, 
+      _id: false,
+      daysAvailable:[{name: String,
+        _id: false,
         from: Number, 
         to: Number}]}],
     allAround: [{name: String,
+      _id: false,
       daysAvailable:[{name: String, 
+        _id: false,
         from: Number, 
         to: Number}]}],
     openersRequired: Number,
@@ -30,6 +43,134 @@ schedule: [{
 });
 
 const Managers = db.model("Managers",managerSchema);
+
+let manager;
+
+
+function validateCredentials(credentials) {
+  manager = credentials.user;
+  return new Promise((resolve, reject) => {
+    Managers.findOne({ userName: credentials.user }).then((userInfo) => {
+      if (userInfo && userInfo.passWord === credentials.pw) {
+        resolve(userInfo); 
+      } else {
+        reject('Invalid credentials'); 
+      }
+    }).catch(err => {
+      console.log(err);
+      reject(err); 
+    });
+  });
+}
+
+function createUser(userInfo) {
+  return new Promise((resolve,reject)=>{
+    try{
+      if(userInfo.pw === userInfo.pw2)
+      {
+        let workDays = [
+          {
+            opener: [],
+            closer: [],
+            allAround: [],
+            day: "Sunday",
+            allAroundsRequired: userInfo.sunAllAroundsRequired,
+            openersRequired: userInfo.sunOpenersRequired,
+            closersRequired: userInfo.sunClosersRequired,
+            open: userInfo.sunOpen,
+            close: userInfo.sunClose,
+          },
+          {
+            opener: [],
+            closer: [],
+            allAround: [],
+            day: "Monday",
+            allAroundsRequired: userInfo.monAllAroundsRequired,
+            openersRequired: userInfo.monOpenersRequired,
+            closersRequired: userInfo.monClosersRequired,
+            open: userInfo.monOpen,
+            close: userInfo.monClose,
+          },
+          {
+            opener: [],
+            closer: [],
+            allAround: [],
+            day: "Tuesday",
+            allAroundsRequired: userInfo.tuesAllAroundsRequired,
+            openersRequired: userInfo.tuesOpenersRequired,
+            closersRequired: userInfo.tuesClosersRequired,
+            open: userInfo.tuesOpen,
+            close: userInfo.tuesClose,
+          },
+          {
+            opener: [],
+            closer: [],
+            allAround: [],
+            day: "Wednesday",
+            allAroundsRequired: userInfo.wedAllAroundsRequired,
+            openersRequired: userInfo.wedOpenersRequired,
+            closersRequired: userInfo.wedClosersRequired,
+            open: userInfo.wedOpen,
+            close: userInfo.wedClose,
+          },
+          {
+            opener: [],
+            closer: [],
+            allAround: [],
+            day: "Thursday",
+            allAroundsRequired: userInfo.thursAllAroundsRequired,
+            openersRequired: userInfo.thursOpenersRequired,
+            closersRequired: userInfo.thursClosersRequired,
+            open: userInfo.thursOpen,
+            close: userInfo.thursClose,
+          },
+          {
+            opener: [],
+            closer: [],
+            allAround: [],
+            day: "Friday",
+            allAroundsRequired: userInfo.friAllAroundsRequired,
+            openersRequired: userInfo.friOpenersRequired,
+            closersRequired: userInfo.friClosersRequired,
+            open: userInfo.friOpen,
+            close: userInfo.friClose,
+          },
+          {
+            opener: [],
+            closer: [],
+            allAround: [],
+            day: "Saturday",
+            allAroundsRequired: userInfo.satAllAroundsRequired,
+            openersRequired: userInfo.satOpenersRequired,
+            closersRequired: userInfo.satClosersRequired,
+            open: userInfo.satOpen,
+            close: userInfo.satClose,
+          }
+        ];
+     
+        Managers.create({
+          userName: userInfo.user,
+          passWord:userInfo.pw,
+          employees:[],
+          schedule: workDays
+        }).then(manager => {
+          console.log('Manager created:', manager);
+        }).catch(error => {
+          console.error('Error creating manager:', error);
+        }); 
+      }
+      resolve();
+    }catch(err)
+    {
+      reject(err);
+    }
+    
+  })
+ 
+  
+}
+
+
 
 function whichShift(worker, workDay) {
   let shift = null;
@@ -67,7 +208,7 @@ function whichShift(worker, workDay) {
 
 
 function makeSchedule() {
-  return Managers.findOne({ managerName: "Wilson Sum" })
+  return Managers.findOne({ userName:  manager })
     .then(data => {
       const schedule = data.schedule;
       const workers = data.employees;
@@ -205,7 +346,7 @@ async function scheduleReq(daysOfWork)
           open: daysOfWork.satOpen,
           close: daysOfWork.satClose,
       }]; 
- const data = await Managers.updateOne({managerName:"Wilson Sum"},{$set:{schedule:workDays}});
+ const data = await Managers.updateOne({userName: manager},{$set:{schedule:workDays}});
  console.log(data);
   }
   catch(err){
@@ -232,7 +373,7 @@ async function scheduleReq(daysOfWork)
       daysAvailable
     };
 
-    const data = await Managers.updateOne({managerName: "Wilson Sum"}, {$push: {employees: newEmployee}});
+    const data = await Managers.updateOne({userName:  manager}, {$push: {employees: newEmployee}});
     console.log(data); 
   } catch (err) {
     console.log(err); 
@@ -244,7 +385,7 @@ function findEmployee(empName) {
     Managers.aggregate([
       {
         $match: {
-          "managerName": "Wilson Sum"
+          "userName":  manager
         }
       },
       {
@@ -284,7 +425,7 @@ function availabilities(emp)
 
 
 function newSchedule() {
-  Managers.find({managerName: "Wilson Sum"},{ _id: 0,employees: 1 }).then((listOfWorkers) => {
+  Managers.find({userName:  manager},{ _id: 0,employees: 1 }).then((listOfWorkers) => {
     if (listOfWorkers.length > 0 && listOfWorkers[0].employees) {
       let employees = listOfWorkers[0].employees; 
       for (let i = employees.length - 1; i > 0; i--) {
@@ -316,7 +457,7 @@ for (let i = employees.length - 1; i > midPoint; i--) {
   [employees[i], employees[j]] = [employees[j], employees[i]];
 }
 
-      Managers.updateOne({managerName: "Wilson Sum"}, {$set: {employees: employees}})
+      Managers.updateOne({userName:  manager}, {$set: {employees: employees}})
         .then(updateResult => {
           console.log('Update success:', updateResult);
         })
@@ -330,7 +471,6 @@ for (let i = employees.length - 1; i > midPoint; i--) {
     console.log('Error fetching manager and employees:', err);
   });
 }
-
 
 
 async function editEmployee(empToEdit) {
@@ -349,7 +489,7 @@ async function editEmployee(empToEdit) {
   if(!empToEdit.deleteOrNot){
     try {
       await Managers.updateOne(
-        { managerName: "Wilson Sum", "employees.name": empToEdit.empName },
+        { userName:  manager, "employees.name": empToEdit.empName },
         { $set: { "employees.$.daysAvailable": daysAvailable } }
       );
     } catch (err) {
@@ -358,7 +498,7 @@ async function editEmployee(empToEdit) {
   }else{
     try {
       await Managers.updateOne(
-        { managerName: "Wilson Sum" },
+        { userName: "Wilson Sum" },
         { $pull: { "employees": { "name": empToEdit.empName } } }      
       );
     } catch (err) {
@@ -369,5 +509,5 @@ async function editEmployee(empToEdit) {
 }
 
 
-module.exports ={makeSchedule,whichShift,Managers,newWorker,scheduleReq,newSchedule,findEmployee,editEmployee};
+module.exports ={ validateCredentials,createUser, manager,makeSchedule,whichShift,Managers,newWorker,scheduleReq,newSchedule,findEmployee,editEmployee};
 

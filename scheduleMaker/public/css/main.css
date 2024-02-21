@@ -6,11 +6,12 @@
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
-input[type="text"], input[type="number"], input[type="checkbox"], input[type="submit"] {
+input[type="text"], input[type="number"], input[type="checkbox"], input[type="submit"], input[type="password"] {
   border: 1px solid #000000; /* Thinner border */
   padding: 2px; /* Less space inside, making the input look smaller */
   margin: 2px 0; /* Less space outside, for a tighter layout */
 }
+
 
 
 
