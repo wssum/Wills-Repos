@@ -5,7 +5,7 @@ let port = process.env.PORT || 8080;
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(express.static('public'));
-
+app.use(express.static('views'));
 
 app.get("/editSchedule",(req,res)=>{
         res.render("scheduleForm");
@@ -56,6 +56,13 @@ app.post("/newEmployee",(req,res)=>{
     });
 
     app.get("/",(req,res)=>{
+        scheduleFuncs.makeSchedule().then((schedule)=>{
+         res.render("finalSchedule",{data:schedule});
+        })
+     });
+
+     app.get("/newSchedule",(req,res)=>{
+        scheduleFuncs.newSchedule();
         scheduleFuncs.makeSchedule().then((schedule)=>{
          res.render("finalSchedule",{data:schedule});
         })

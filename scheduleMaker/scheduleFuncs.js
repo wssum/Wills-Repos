@@ -85,7 +85,7 @@ function makeSchedule() {
                 {
                     date.allAround.push(worker);
                 }
-            } if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
+            }if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
               if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
               !date.opener.some(workMan=>workMan.name === worker.name)&&
               !date.closer.some(workMan=>workMan.name === worker.name))
@@ -233,9 +233,9 @@ async function scheduleReq(daysOfWork)
     };
 
     const data = await Managers.updateOne({managerName: "Wilson Sum"}, {$push: {employees: newEmployee}});
-    console.log(data); // This will log the result of the update operation
+    console.log(data); 
   } catch (err) {
-    console.log(err); // This will log any errors that occur during the update
+    console.log(err); 
   }
 }
 
@@ -252,7 +252,7 @@ function findEmployee(empName) {
       },
       {
         $match: {
-          "employees.name": empName.workerName // Ensure empName is correctly referenced here
+          "employees.name": empName.workerName 
         }
       },
       {
@@ -264,23 +264,58 @@ function findEmployee(empName) {
     ])
     .then(results => {
       console.log(results);
-      resolve(results); // Resolve the promise with the results
+      resolve(results);
     })
     .catch(err => {
       console.error(err);
-      reject(err); // Reject the promise if there's an error
+      reject(err);
     });
   });
 }
 
+function availabilities(emp)
+{
+  let totalAvailability = 0;
+  emp.daysAvailable.forEach((available)=>{
+   totalAvailability = totalAvailability + (available.to - available.from);
+  })
+  return totalAvailability;
+}
+
+
 function newSchedule() {
-  Managers.find({managerName: "Wilson Sum", employees: true, _id: 0}).then((listOfWorkers) => {
+  Managers.find({managerName: "Wilson Sum"},{ _id: 0,employees: 1 }).then((listOfWorkers) => {
     if (listOfWorkers.length > 0 && listOfWorkers[0].employees) {
       let employees = listOfWorkers[0].employees; 
       for (let i = employees.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [employees[i], employees[j]] = [employees[j], employees[i]];
       }
+      
+      for (let i = 0; i < employees.length; i++) {
+        for (let a = 0; a < employees.length; a++) {
+          if (availabilities(employees[i]) < availabilities(employees[a])) {
+            let dummy = employees[i];
+            employees[i] = employees[a];
+            employees[a] = dummy;
+          }
+        }
+      }
+  
+      for (let i = Math.floor(employees.length / 2); i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [employees[i], employees[j]] = [employees[j], employees[i]];
+      }
+
+
+let midPoint = Math.floor(employees.length / 2);
+
+
+for (let i = employees.length - 1; i > midPoint; i--) {
+  let j = Math.floor(Math.random() * (i - midPoint + 1)) + midPoint;
+  [employees[i], employees[j]] = [employees[j], employees[i]];
+}
+
       Managers.updateOne({managerName: "Wilson Sum"}, {$set: {employees: employees}})
         .then(updateResult => {
           console.log('Update success:', updateResult);
@@ -295,6 +330,8 @@ function newSchedule() {
     console.log('Error fetching manager and employees:', err);
   });
 }
+
+
 
 async function editEmployee(empToEdit) {
   let availability = [
