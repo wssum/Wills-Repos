@@ -19,9 +19,6 @@ public:
 private slots:
     void on_newPatientButton_clicked();
 
-    void on_updatePatientForm_clicked();
-
-    void on_newPatientEntry_clicked();
 
     void on_updateButton_clicked();
 
@@ -33,8 +30,6 @@ private slots:
 
     void on_checkAppointmentsButton_clicked();
 
-
-    void on_appointmentFormButton_clicked();
 
 private:
     Ui::MainWindow *ui;

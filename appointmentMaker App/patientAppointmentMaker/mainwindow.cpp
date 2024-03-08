@@ -18,12 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     db.setDatabaseName("PatientsRecords.db");
     db.open();
     createTable();
-    QGroupBox* updateRecords = findChild<QGroupBox*>("updateRecordForm");
-    QGroupBox* newPatient = findChild<QGroupBox*>("patientEntryForm");
-    QGroupBox* newAppointment = findChild<QGroupBox*>("appointmentsForm");
-    updateRecords->hide();
-    newPatient->hide();
-    newAppointment->show();
 }
 
 MainWindow::~MainWindow()
@@ -75,29 +69,6 @@ void MainWindow::on_newPatientButton_clicked()
     query.addBindValue(ohip);
     query.exec();
     readTable();
-}
-
-
-void MainWindow::on_updatePatientForm_clicked()
-{
-    QGroupBox* updateRecords = findChild<QGroupBox*>("updateRecordForm");
-    QGroupBox* newPatient = findChild<QGroupBox*>("patientEntryForm");
-    QGroupBox* newAppointment = findChild<QGroupBox*>("appointmentsForm");
-
-    newAppointment->hide();
-    newPatient->hide();
-    updateRecords->show();
-}
-
-void MainWindow::on_newPatientEntry_clicked()
-{
-    QGroupBox* updateRecords = findChild<QGroupBox*>("updateRecordForm");
-    QGroupBox* newPatient = findChild<QGroupBox*>("patientEntryForm");
-    QGroupBox* newAppointment = findChild<QGroupBox*>("appointmentsForm");
-
-    newAppointment->hide();
-    updateRecords->hide();
-    newPatient->show();
 }
 
 
@@ -256,19 +227,5 @@ void MainWindow::on_checkAppointmentsButton_clicked()
           QString ohip = showAppointmentsQuery.value(6).toString();
 
           ui->appointmentsDisplay->append(QString("Patient: %1 Appointment Date/Time: %2 - %3 Phone: %4 Email: %5 OHIP: %6 Notes: %7").arg(name).arg(appDate).arg(appTime).arg(phone).arg(email).arg(ohip).arg(reason));
-    }
-}
-
-
-void MainWindow::on_appointmentFormButton_clicked()
-{
-    QGroupBox* updateRecords = findChild<QGroupBox*>("updateRecordForm");
-    QGroupBox* newPatient = findChild<QGroupBox*>("patientEntryForm");
-    QGroupBox* newAppointment = findChild<QGroupBox*>("appointmentsForm");
-    if(updateRecords)
-    {
-        updateRecords->hide();
-        newPatient->hide();
-        newAppointment->show();
     }
 }
