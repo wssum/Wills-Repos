@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>open-file_40455.png</file>
+        <file>pngtree-vector-save-icon-png-image_322173.jpg</file>
+    </qresource>
+</RCC>
