@@ -18,13 +18,13 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>10</y>
       <width>1461</width>
       <height>831</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -185,6 +185,52 @@
         <height>781</height>
        </rect>
       </property>
+     </widget>
+     <widget class="QPushButton" name="searchAllPatients">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>380</y>
+        <width>151</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Search All Patients</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>270</y>
+        <width>241</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_19">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Search by name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="searchByName"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="searchByPatientName">
+         <property name="text">
+          <string>Search</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
@@ -352,7 +398,7 @@
        <rect>
         <x>30</x>
         <y>60</y>
-        <width>311</width>
+        <width>320</width>
         <height>318</height>
        </rect>
       </property>
@@ -373,24 +419,6 @@
              <property name="text">
               <string>Time of Appointment:</string>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox">
-             <property name="title">
-              <string>GroupBox</string>
-             </property>
-             <widget class="QWidget" name="layoutWidget">
-              <property name="geometry">
-               <rect>
-                <x>-140</x>
-                <y>-30</y>
-                <width>313</width>
-                <height>320</height>
-               </rect>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_8"/>
-             </widget>
             </widget>
            </item>
            <item>

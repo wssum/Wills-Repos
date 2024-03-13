@@ -31,6 +31,11 @@ private slots:
     void on_checkAppointmentsButton_clicked();
 
 
+    void on_searchAllPatients_clicked();
+
+
+    void on_searchByPatientName_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSqlDatabase db;

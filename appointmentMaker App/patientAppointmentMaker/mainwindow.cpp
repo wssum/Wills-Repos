@@ -215,7 +215,7 @@ void MainWindow::on_makeAppointmentButton_clicked()
                     ui->appointmentsDisplay->append(QString("Patient: %1 Appointment Date/Time: %2 - %3 Phone: %4 Email: %5 OHIP: %6 Notes: %7").arg(name).arg(appDate).arg(appTime).arg(phone).arg(email).arg(ohip).arg(reason));
               }
         }
-
+      ui->searchedPatientLabel->clear();
 }
 
 
@@ -241,5 +241,31 @@ void MainWindow::on_checkAppointmentsButton_clicked()
           QString ohip = showAppointmentsQuery.value(6).toString();
 
           ui->appointmentsDisplay->append(QString("Patient: %1 Appointment Date/Time: %2 - %3 Phone: %4 Email: %5 OHIP: %6 Notes: %7").arg(name).arg(appDate).arg(appTime).arg(phone).arg(email).arg(ohip).arg(reason));
+    }
+}
+
+void MainWindow::on_searchAllPatients_clicked()
+{
+    readTable();
+}
+
+void MainWindow::on_searchByPatientName_clicked()
+{
+    ui->recordstextBrowser->clear();
+    QString nameToSearch = ui->searchByName->text();
+    QSqlQuery query;
+    query.prepare("SELECT * FROM patientRecords WHERE UPPER(patientName) LIKE UPPER(?)");
+    query.addBindValue("%" + nameToSearch + "%");
+    query.exec();
+    while(query.next())
+    {
+          QString name = query.value(0).toString();
+          QString sex = query.value(1).toString();
+          QDate dateToConvert = query.value(2).toDate();
+          QString bday = dateToConvert.toString("yyyy-MM-dd");
+          QString email = query.value(3).toString();
+          QString phone = query.value(4).toString();
+          QString ohip = query.value(5).toString();
+          ui->recordstextBrowser->append(QString("Patient Name: %1 | Gender: %2 | BirthDay: %3 | Email: %4 | Phone-Number:(%5) | OHIP Card: %6").arg(name).arg(sex).arg(bday).arg(email).arg(phone).arg(ohip));
     }
 }
