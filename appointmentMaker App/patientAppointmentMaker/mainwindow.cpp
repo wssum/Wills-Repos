@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QDebug>
 #include <QSqlError>
+#include <QMessageBox>
 #include <stdio.h>
 #include <qgroupbox.h>
 
@@ -78,7 +79,16 @@ void MainWindow::on_updateButton_clicked()
     QString newEmail = ui->newEmail->text();
     QString newPhone = ui->newPhone->text();
     QString newGender = ui->newGenderComboBox->currentText();
-    QString patient= ui->patientToUpdate->text();
+    QString nameToSearch= ui->patientToUpdate->text();
+    QString patient;
+    QSqlQuery query;
+    query.prepare("SELECT * FROM patientRecords WHERE patientName = ?");
+    query.addBindValue(nameToSearch);
+    query.exec();
+
+    while(query.next()){
+        patient = query.value(0).toString();
+    }
 
     if(patient.length() > 0)
     {
@@ -127,6 +137,8 @@ void MainWindow::on_updateButton_clicked()
               ui->updateDisplay->append(QString("Patient Name: %1 | Gender: %2 | BirthDay: %3 | Email: %4 | Phone-Number:(%5) | OHIP Card: %6").arg(name).arg(sex).arg(bday).arg(email).arg(phone).arg(ohip));
         }
 
+    }else{
+        QMessageBox::critical(this,"Error","No Patient Found.");
     }
 
 }
@@ -147,6 +159,8 @@ void MainWindow::on_searchPatientButton_clicked()
     if(name.length()>0)
     {
         ui->searchedPatientLabel->setText(name);
+    }else{
+        QMessageBox::critical(this,"Error","No Patient Found.");
     }
 }
 
