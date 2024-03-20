@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <title>Connect four</title>
+</head>
+<body>
+
+    <div class="player-disc player-red hide">
+    </div>
+    <div id="boardContainer">
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <p id="winningMsg"></p>
+    <button id="newGame" class="close" disabled>Next Game</button>
+  </div>
+
+</div>
+        <div id="scoreBoard">
+            <div id="red">Red Player Score: <b id="redScore"></b></div>
+            <div id="yellow">Yellow Player Score: <b id="yellowScore"></b></div>
+            <div id="tie">Ties: <b id="tieCount"></b></div>
+            <div id="gameButtons"> 
+                <button id="reset">Reset Game</button>
+            </div>
+        </div>
+        <div id="main-board">
+            <div class="grid">
+                <div class="row">
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                   <div class="column">
+                       <div class="circle"></div>
+                   </div>
+                </div>
+               </div>
+               <div id="bottomBoard">
+               </div>
+        </div>
+    </div>
+
+    <script src ="connectFour.js"></script>
+</body>
+</html>
