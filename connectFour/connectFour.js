@@ -77,11 +77,12 @@ function checkWinner()
 {
     // horizontal check
     for (let rowIndex = 0; rowIndex < NUM_ROWS; rowIndex++) {
+        /*shifts to each row and the for loop below
+         will check on each column of that row*/
         const row = gridState[rowIndex];
         let a = -1;
         for(let i = 0; i < 4; i++){
             if(row[a+1] == currentPlayer && row[a+2] == currentPlayer && row[a+3] == currentPlayer && row[a+4] == currentPlayer){
-            //    tallyScore()
                 return "WIN";
             }
             a++;
@@ -93,8 +94,10 @@ function checkWinner()
         let a = -1;
         for(let b = 0; b < 3; b++)
         {
+            /*goes on each row to check same column making a 
+            vertical line check and repeats till all columns 
+            checked*/
             if(gridState[a+1][i] == currentPlayer && gridState[a+2][i] == currentPlayer && gridState[a+3][i] == currentPlayer && gridState[a+4][i] == currentPlayer){
-                // tallyScore()
                 return "WIN"
             }
             a++;
@@ -104,6 +107,10 @@ function checkWinner()
     // down diagonal checks
     for(let i = 0; i < 3; i++)
     {
+        /*stays on one row controlled by outer for loop 
+        and checks the slashed pattern of each row controlled
+        by then inner for loop and then goes to the next row 
+        and does the same*/
         for(let a = 0; a < 4; a ++)
         {
             if(gridState[i][a] == currentPlayer && 
@@ -119,13 +126,13 @@ function checkWinner()
     // up diagonal checks
     for(let i = 0; i < 3; i++)
     {
+        /*same as the one above but reversed at the other part on the other side*/
         for(let a = 3; a < 7; a++)
         {
             if(gridState[i][a] == currentPlayer && 
                 gridState[i+1][a-1] == currentPlayer && 
                 gridState[i+2][a-2] == currentPlayer && 
                 gridState[i+3][a-3] == currentPlayer){
-                // tallyScore()
                 return "WIN"
             }
         }
@@ -200,7 +207,10 @@ window.addEventListener("click", function(){
                     nextButton.removeAttribute("disabled");
                     resetButton.setAttribute("disabled", 'true');
                 }
-
+                /* NUM_COLS will multiply by each rowIndex to skip
+                   over to the right row and then colIndex will be 
+                   added to be where the disc should be dropped.
+                 */
                 const circleIndex = NUM_COLS * rowIndex + colIndex; // index between 0 and 41
                 const circle = circles[circleIndex];
                 // update the circle and toggle the player
@@ -214,7 +224,7 @@ window.addEventListener("click", function(){
                     setCurrentPlayer("r"); // toggle the player
                 }
 
-                break; // NOTE: use break instead of i = 0;
+                break;
             }
        }
     }
