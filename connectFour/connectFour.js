@@ -32,7 +32,7 @@ function getEmptyGridState() {
     });
 }
 
-
+/*Adds highlighted class which will be styled in css file. */
 function highlightCol(index){
     let columns = document.getElementsByClassName("column");
     for(let i = 0; i< columns.length; i++){
@@ -50,8 +50,10 @@ window.addEventListener("mousemove", function(event){
     const offset = grid.offsetLeft;
     const columnWidth = column.clientWidth;
     colIndex = Math.floor((event.clientX-offset) / columnWidth);
+    /*If the colIndex is within the grid it'll unhide the disc*/
     if(colIndex >= 0 && colIndex <= NUM_ROWS)
     {
+        /*Getting rid of offset for playerdisc location*/
         const playerDiscLocation = offset + (columnWidth * colIndex) + ((columnWidth - playerDisc.clientWidth) / 2);        
         playerDisc.style.left = playerDiscLocation + "px";
         playerDisc.classList.remove("hide");
@@ -181,6 +183,7 @@ function reset(){
 
 
 window.addEventListener("click", function(){
+    //colIndex will be updated in mouseMove evenlistener
     if (colIndex >= 0 && colIndex < NUM_COLS && !finGame)
     {
         // find an open slot checking from bottom row to top row at chosen column
