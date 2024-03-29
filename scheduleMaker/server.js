@@ -71,13 +71,6 @@ app.post("/newEmployee",(req,res)=>{
             res.render("home");
         }).catch(err => console.log(err));
     });
- 
-    
-    app.get("/currentSchedule",(req,res)=>{
-        scheduleFuncs.makeSchedule().then((schedule)=>{
-         res.render("finalSchedule",{data:schedule});
-        })
-     });
 
      app.get("/",(req,res)=>{
          res.render("loginOrCreate");
@@ -95,6 +88,12 @@ app.post("/newEmployee",(req,res)=>{
      app.get("/newSchedule",(req,res)=>{
         scheduleFuncs.newSchedule();
         scheduleFuncs.makeSchedule().then((schedule)=>{
+         res.render("finalSchedule",{data:schedule});
+        })
+     });
+    app.get("/currentSchedule",(req,res)=>{
+        scheduleFuncs.currentSchedule().then((schedule)=>{
+            console.log("data has:"+schedule)
          res.render("finalSchedule",{data:schedule});
         })
      });

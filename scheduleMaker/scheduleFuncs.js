@@ -39,13 +39,39 @@ schedule: [{
     allAroundsRequired: Number,
     open: Number,
     close: Number
+  }],
+  currentSchedule:[{
+    day: String,
+    _id: false,
+    opener: [{name: String,
+      _id: false,
+      daysAvailable:[{name: String,
+        _id: false, 
+        from: Number, 
+        to: Number}]}],
+    closer: [{name: String,
+      _id: false,
+      daysAvailable:[{name: String,
+        _id: false,
+        from: Number, 
+        to: Number}]}],
+    allAround: [{name: String,
+      _id: false,
+      daysAvailable:[{name: String, 
+        _id: false,
+        from: Number, 
+        to: Number}]}],
+    openersRequired: Number,
+    closersRequired: Number,
+    allAroundsRequired: Number,
+    open: Number,
+    close: Number
   }]
 });
 
 const Managers = db.model("Managers",managerSchema);
 
 let manager;
-
 
 function validateCredentials(credentials) {
   manager = credentials.user;
@@ -152,7 +178,8 @@ function createUser(userInfo) {
           userName: userInfo.user,
           passWord:userInfo.pw,
           employees:[],
-          schedule: workDays
+          schedule: workDays,
+          currentSchedule:[]
         }).then(manager => {
           console.log('Manager created:', manager);
         }).catch(error => {
@@ -167,11 +194,9 @@ function createUser(userInfo) {
     {
       reject(err);
     }
-    
   })
- 
-  
 }
+
 
 /*worker arg is for the worker in questions to see
   if the worker is available. workDay is to see if 
@@ -181,9 +206,9 @@ function whichShift(worker, workDay) {
   let shift = null;
   worker.daysAvailable.forEach((shiftDay) => {
       if (shiftDay.name.toLowerCase() === workDay.day.toLowerCase()) {
+        /*Checks to see if worker should be an opener, closer or an all around
+          which may also be used as a backup opener or closer. */
           if (shiftDay.from <= workDay.open && shiftDay.to < workDay.close) {
-              /*Checks to see if worker should be an opener, closer or an all around
-                which may also be used as a backup opener or closer. */
               if(workDay.opener.length < workDay.openersRequired)
               {
                   shift = "O";
@@ -219,18 +244,17 @@ function whichShift(worker, workDay) {
 function makeSchedule() {
   return Managers.findOne({ userName:  manager })
     .then(data => {
-      const schedule = data.schedule;
+      let schedule = data.schedule;
       const workers = data.employees;
-
       /*Outter forEach loop controls which day is operated on
         and inner forEach loop goes over all the workers to
         see if they are available.*/
       schedule.forEach(date => {
         workers.forEach(worker => {
           const isAvailable = worker.daysAvailable.some(workerDay => workerDay.name.toLowerCase() === date.day.toLowerCase());
-
+          
           if (isAvailable) {
-                    /*Below checks to see if the current worker could be an opener, closer or allarounder
+            /*Below checks to see if the current worker could be an opener, closer or allarounder
               as well as checking to see if the worker has already been enlisted in the schedule yet.*/
             if ((whichShift(worker,date)== "A") && date.allAround.length < date.allAroundsRequired) {
                 if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
@@ -239,7 +263,8 @@ function makeSchedule() {
                 {
                     date.allAround.push(worker);
                 }
-            }if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
+            }
+            if ((whichShift(worker,date)== "O") && (date.opener.length < date.openersRequired)) {
               if(!date.allAround.some(workMan=>workMan.name === worker.name)&&
               !date.opener.some(workMan=>workMan.name === worker.name)&&
               !date.closer.some(workMan=>workMan.name === worker.name))
@@ -275,6 +300,10 @@ function makeSchedule() {
         }  
         });
       });
+ 
+      Managers.updateOne({userName: manager}, {$set:{currentSchedule:schedule}})
+  .then(result => console.log(result))
+  .catch(error => console.log(error));
       return schedule;
     })
     .catch(error => {
@@ -364,10 +393,8 @@ async function scheduleReq(daysOfWork)
   }
   catch(err){
     console.log(err);
-  }
-         
+  }      
 }
-
 
  async function newWorker(employ) {
   try {
@@ -385,7 +412,6 @@ async function scheduleReq(daysOfWork)
       name: employ.empName,
       daysAvailable
     };
-
     const data = await Managers.updateOne({userName:  manager}, {$push: {employees: newEmployee}});
     console.log(data); 
   } catch (err) {
@@ -439,6 +465,7 @@ function availabilities(emp)
   return totalAvailability;
 }
 
+
 /*This function is used to randomize the list of employees so
   that when make a new schedule it'll be a different order in 
   which who gets assigned to each shift next.*/
@@ -446,10 +473,10 @@ function newSchedule() {
   Managers.find({userName:  manager},{ _id: 0,employees: 1 }).then((listOfWorkers) => {
     if (listOfWorkers.length > 0 && listOfWorkers[0].employees) {
       let employees = listOfWorkers[0].employees; 
-        /*Organizes in asscending order so that those with
+      
+      /*Organizes in asscending order so that those with
         a more scaled down availability will get first
         choices since they can only work on certain days.*/
-      
       for (let i = 0; i < employees.length; i++) {
         for (let a = 0; a < employees.length; a++) {
           if (availabilities(employees[i]) < availabilities(employees[a])) {
@@ -467,12 +494,10 @@ function newSchedule() {
         [employees[i], employees[j]] = [employees[j], employees[i]];
       }
 
-
-let midPoint = Math.floor(employees.length / 2);
-
 /*Using the midpoint those with the most availability
   will also get shuffled so that their assignment of 
   shifts will be more random. */
+let midPoint = Math.floor(employees.length / 2);
 for (let i = employees.length - 1; i > midPoint; i--) {
   let j = Math.floor(Math.random() * (i - midPoint + 1)) + midPoint;
   [employees[i], employees[j]] = [employees[j], employees[i]];
@@ -519,7 +544,7 @@ async function editEmployee(empToEdit) {
   }else{
     try {
       await Managers.updateOne(
-        { userName: "Wilson Sum" },
+        { userName: manager },
         { $pull: { "employees": { "name": empToEdit.empName } } }      
       );
     } catch (err) {
@@ -529,6 +554,13 @@ async function editEmployee(empToEdit) {
 
 }
 
+async function currentSchedule() {
+  let scheduleData = await Managers.findOne({ userName: manager}, { currentSchedule: true});
+  const currentPlan = scheduleData.currentSchedule;
+  console.log(currentPlan);
+  return currentPlan;
+}
 
-module.exports ={ validateCredentials,createUser, manager,makeSchedule,whichShift,Managers,newWorker,scheduleReq,newSchedule,findEmployee,editEmployee};
+
+module.exports ={ validateCredentials,currentSchedule,createUser, manager,makeSchedule,whichShift,Managers,newWorker,scheduleReq,newSchedule,findEmployee,editEmployee};
 
